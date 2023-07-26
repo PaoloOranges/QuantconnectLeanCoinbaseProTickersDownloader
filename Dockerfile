@@ -36,8 +36,7 @@ RUN echo "{" > $CONFIG_JSON_FILENAME && \
     echo "}" >> $CONFIG_JSON_FILENAME
 
 # Set Crontab
-RUN crontab -l | { cat; echo "59 23 * * * dotnet $EXECUTABLE_PATH/QuantconnectLeanCoinbaseProTickersDownloader.dll SHARED_STORAGE_HOME $EXECUTABLE_PATH/tickers.txt > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"; } | crontab -
-# RUN crontab -l | { cat; echo "*/5 * * * * bash $SCRIPTS_PATH/DownloadDataUntilNow.sh -p $DOWNLOADER_PATH -t $SCRIPTS_PATH/tickers -h $SHARED_STORAGE_HOME > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"; } | crontab -
+RUN crontab -l | { cat; echo "59 23 * * * dotnet $EXECUTABLE_PATH/QuantconnectLeanCoinbaseProTickersDownloader.dll $SHARED_STORAGE_HOME $EXECUTABLE_PATH/tickers.txt > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"; } | crontab -
 
 # CMD ["/bin/bash", "-c", "$SCRIPTS_PATH/DownloadDataUntilNow.sh -p $DOWNLOADER_PATH -t $SCRIPTS_PATH/tickers -h $SHARED_STORAGE_HOME > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"]
 #Alpine

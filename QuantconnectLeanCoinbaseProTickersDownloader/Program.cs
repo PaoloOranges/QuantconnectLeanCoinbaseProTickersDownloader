@@ -3,8 +3,6 @@ using QuantConnect.ToolBox.GDAXDownloader;
 using System.Globalization;
 using System.IO;
 
-Console.WriteLine("Hello, World!");
-
 string outputPath = "";
 string tickerFilePath;
 
