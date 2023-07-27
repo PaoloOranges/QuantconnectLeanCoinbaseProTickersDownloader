@@ -8,7 +8,8 @@ WORKDIR /BUILD
 
 COPY QuantconnectLeanCoinbaseProTickersDownloader .
 
-RUN dotnet publish QuantconnectLeanCoinbaseProTickersDownloader.csproj -c Release -o /output
+RUN dotnet publish QuantconnectLeanCoinbaseProTickersDownloader.csproj -c Release -o /output && \
+    rm -rf QuantconnectLeanCoinbaseProTickersDownloader
 
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime:6.0-alpine
 

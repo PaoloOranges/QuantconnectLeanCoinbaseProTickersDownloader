@@ -1,7 +1,9 @@
 ﻿// See https://aka.ms/new-console-template for more information
+using QuantConnect.Data;
+using QuantConnect;
 using QuantConnect.ToolBox.GDAXDownloader;
+using QuantConnect.Logging;
 using System.Globalization;
-using System.IO;
 
 string outputPath = "";
 string tickerFilePath;
@@ -49,12 +51,41 @@ else
     return;
 }
 
-string[] TIME_RESOLUTIONS = { "Minute", "Hour", "Daily" };
-
-foreach (string timeResolution in TIME_RESOLUTIONS)
+Resolution[] TIME_RESOLUTIONS = { Resolution.Minute, Resolution.Hour, Resolution.Daily };
+try
 {
-    GDAXDownloaderProgram.GDAXDownloader(tickers, timeResolution, fromDate, toDate);
-}
+    foreach (Resolution timeResolution in TIME_RESOLUTIONS)
+    {
 
-// Success
-File.WriteAllText(lastSuccessFilePath, DateTime.Now.ToString(DATE_FORMAT));
+        // Load settings from config.json
+        var dataDirectory = Globals.DataFolder;
+
+        // Create an instance of the downloader
+        const string market = Market.GDAX;
+        var downloader = new GDAXDownloader();
+        foreach (var ticker in tickers)
+        {
+            // Download the data
+            var symbolObject = Symbol.Create(ticker, SecurityType.Crypto, market);
+
+            var data = downloader.Get(new DataDownloaderGetParameters(symbolObject, timeResolution, fromDate, toDate));
+
+            // Save the data
+            var writer = new LeanDataWriter(timeResolution, symbolObject, dataDirectory, TickType.Trade);
+            var distinctData = data.GroupBy(i => i.Time, (key, group) => group.First()).ToArray();
+
+            writer.Write(distinctData);
+        }
+
+    }
+
+    // Success
+    File.WriteAllText(lastSuccessFilePath, DateTime.Now.ToString(DATE_FORMAT));
+
+}
+catch (Exception err)
+{
+    Log.Error(err);
+    Log.Error(err.Message);
+    Log.Error(err.StackTrace);
+}
