@@ -11,7 +11,7 @@ COPY QuantconnectLeanCoinbaseProTickersDownloader .
 RUN dotnet publish QuantconnectLeanCoinbaseProTickersDownloader.csproj -c Release -o /output && \
     rm -rf QuantconnectLeanCoinbaseProTickersDownloader
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/runtime:6.0-alpine
+FROM mcr.microsoft.com/dotnet/runtime:6.0-alpine
 
 ENV EXECUTABLE_PATH=/QuantconnectLeanCoinbaseProTickersDownloader
 ENV SHARED_STORAGE_HOME=/Shared
