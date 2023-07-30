@@ -1,7 +1,3 @@
-#
-# Release Version
-#
-
 FROM mcr.microsoft.com/dotnet/sdk:7.0 as builder
 
 WORKDIR /BUILD
@@ -22,15 +18,11 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 #Alpine
 RUN apk update
 RUN apk add bash icu-libs
-#Ubuntu/Debian
-# RUN apt update
-# RUN apt install -y nano
 
 WORKDIR $EXECUTABLE_PATH    
 COPY --from=builder /output .
 COPY tickers.txt .
 
-#ADD DockerBuilders/UtilitiesForDockerImage/config.json .
 # create config file dynamically
 RUN echo "{" > $CONFIG_JSON_FILENAME && \
     echo "\"data-folder\": \"$SHARED_STORAGE_HOME/Data/\"," >> $CONFIG_JSON_FILENAME && \
@@ -40,6 +32,4 @@ RUN echo "{" > $CONFIG_JSON_FILENAME && \
 # Set Crontab
 RUN crontab -l | { cat; echo "30 23 * * * dotnet $DOWNLOADER_BIN $EXECUTABLE_PATH/$CONFIG_JSON_FILENAME $SHARED_STORAGE_HOME $EXECUTABLE_PATH/tickers.txt > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"; } | crontab -
 
-# CMD ["/bin/bash", "-c", "$SCRIPTS_PATH/DownloadDataUntilNow.sh -p $DOWNLOADER_PATH -t $SCRIPTS_PATH/tickers -h $SHARED_STORAGE_HOME > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"]
-#Alpine
 CMD ["crond", "-f" ] 
