@@ -16,6 +16,7 @@ FROM mcr.microsoft.com/dotnet/runtime:6.0-alpine
 ENV EXECUTABLE_PATH=/QuantconnectLeanCoinbaseProTickersDownloader
 ENV SHARED_STORAGE_HOME=/Shared
 ENV CONFIG_JSON_FILENAME=config.json
+ENV DOWNLOADER_BIN=$EXECUTABLE_PATH/QuantconnectLeanCoinbaseProTickersDownloader.dll
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 #Alpine
@@ -37,7 +38,7 @@ RUN echo "{" > $CONFIG_JSON_FILENAME && \
     echo "}" >> $CONFIG_JSON_FILENAME
 
 # Set Crontab
-RUN crontab -l | { cat; echo "59 23 * * * dotnet $EXECUTABLE_PATH/QuantconnectLeanCoinbaseProTickersDownloader.dll $SHARED_STORAGE_HOME $EXECUTABLE_PATH/tickers.txt > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"; } | crontab -
+RUN crontab -l | { cat; echo "30 23 * * * dotnet $DOWNLOADER_BIN $EXECUTABLE_PATH/$CONFIG_JSON_FILENAME $SHARED_STORAGE_HOME $EXECUTABLE_PATH/tickers.txt > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"; } | crontab -
 
 # CMD ["/bin/bash", "-c", "$SCRIPTS_PATH/DownloadDataUntilNow.sh -p $DOWNLOADER_PATH -t $SCRIPTS_PATH/tickers -h $SHARED_STORAGE_HOME > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"]
 #Alpine
