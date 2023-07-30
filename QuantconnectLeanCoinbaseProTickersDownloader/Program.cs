@@ -4,18 +4,31 @@ using QuantConnect;
 using QuantConnect.ToolBox.GDAXDownloader;
 using QuantConnect.Logging;
 using System.Globalization;
+using QuantConnect.Configuration;
 
+string configFilePath = "";
 string outputPath = "";
 string tickerFilePath;
 
-if (args.Length >= 2)
+if (args.Length >= 3)
 {
-    outputPath = args[0];
-    tickerFilePath = args[1];
+    configFilePath = args[0];
+    outputPath = args[1];
+    tickerFilePath = args[2];
 }
 else
 {
-    Console.WriteLine("No arguments, Expected, in order: OutputPath TickersFile ");
+    Console.WriteLine("No arguments, Expected, in order: <ConfigFilePath> <OutputPath> <TickersFile> ");
+    return;
+}
+
+if(File.Exists(configFilePath))
+{
+    Config.SetConfigurationFile(configFilePath);
+}
+else
+{
+    Console.WriteLine(configFilePath + " does not exists");
     return;
 }
 

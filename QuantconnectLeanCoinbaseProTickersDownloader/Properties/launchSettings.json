@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "QuantconnectLeanCoinbaseProTickersDownloader": {
+      "commandName": "Project",
+      "workingDirectory": "G:\\SourceCode\\QuantitativeTrading\\QuantConnect\\QuantconnectLeanCoinbaseProTickersDownloader"
+    },
+    "Test Data Debug": {
+      "commandName": "Project",
+      "commandLineArgs": "config.json . tickers_dbg.txt",
+      "workingDirectory": "G:\\SourceCode\\QuantitativeTrading\\QuantConnect\\QuantconnectLeanCoinbaseProTickersDownloader"
+    }
+  }
+}
