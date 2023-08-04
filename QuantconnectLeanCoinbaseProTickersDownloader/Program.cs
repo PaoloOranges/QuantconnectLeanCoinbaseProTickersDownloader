@@ -6,7 +6,6 @@ using QuantConnect.Logging;
 using System.Globalization;
 using QuantConnect.Configuration;
 using System.Text.Json;
-using QuantconnectLeanCoinbaseProTickersDownloader;
 
 string configFilePath = "";
 string outputPath = "";
@@ -42,11 +41,12 @@ const string DATE_FORMAT = "yyyyMMdd-HH:mm:ss";
 
 string lastSuccessFilePath = Path.Combine(outputPath, LAST_DOWNLOAD_SUCCESS_TIME_FILE);
 
-DataSerializationObject tickersAndDate = new DataSerializationObject();
+Dictionary<string, string> tickersAndLastTime = new Dictionary<string, string>();
+
 if(File.Exists(lastSuccessFilePath))
 {
     string jsonFileStr = File.ReadAllText(lastSuccessFilePath);
-    tickersAndDate = JsonSerializer.Deserialize<DataSerializationObject>(jsonFileStr)!;
+    tickersAndLastTime = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonFileStr)!;
 }
 
 string[] tickers;
@@ -79,14 +79,14 @@ try
         DateTime toDate = DateTime.Now;
 
         string fromDateStr;
-        if (tickersAndDate.tickersAndLastTime.TryGetValue(ticker, out fromDateStr))
+        if (tickersAndLastTime.TryGetValue(ticker, out fromDateStr))
         {
             fromDate = DateTime.ParseExact(fromDateStr, DATE_FORMAT, CultureInfo.InvariantCulture);
         }
 
         foreach (Resolution timeResolution in TIME_RESOLUTIONS)
         {
-            
+            Console.WriteLine("Download " + timeResolution + " for " + ticker);
             var data = downloader.Get(new DataDownloaderGetParameters(symbolObject, timeResolution, fromDate, toDate));
 
             // Save the data
@@ -95,11 +95,8 @@ try
 
             writer.Write(distinctData);
         }
-        tickersAndDate.tickersAndLastTime[ticker] = DateTime.Now.ToString(DATE_FORMAT);
+        tickersAndLastTime[ticker] = DateTime.Now.ToString(DATE_FORMAT);
     }
-
-    // Success
-    
 
 }
 catch (Exception err)
@@ -111,7 +108,7 @@ catch (Exception err)
 finally
 {
     var options = new JsonSerializerOptions { WriteIndented = true };
-    string jsonString = JsonSerializer.Serialize(tickersAndDate, options);
+    string jsonString = JsonSerializer.Serialize(tickersAndLastTime, options);
 
     File.WriteAllText(lastSuccessFilePath, jsonString);
 }
