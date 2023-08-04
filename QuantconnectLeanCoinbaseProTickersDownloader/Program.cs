@@ -5,6 +5,8 @@ using QuantConnect.ToolBox.GDAXDownloader;
 using QuantConnect.Logging;
 using System.Globalization;
 using QuantConnect.Configuration;
+using System.Text.Json;
+using QuantconnectLeanCoinbaseProTickersDownloader;
 
 string configFilePath = "";
 string outputPath = "";
@@ -35,21 +37,17 @@ else
 const string LAST_DOWNLOAD_SUCCESS_TIME_FILE = "last_success_time";
 const string DATE_FORMAT = "yyyyMMdd-HH:mm:ss";
 
-DateTime fromDate;
-DateTime toDate = DateTime.Now;
+
+
 
 string lastSuccessFilePath = Path.Combine(outputPath, LAST_DOWNLOAD_SUCCESS_TIME_FILE);
 
+DataSerializationObject tickersAndDate = new DataSerializationObject();
 if(File.Exists(lastSuccessFilePath))
 {
-    string startTimeStr = File.ReadAllText(lastSuccessFilePath);    
-    fromDate = DateTime.ParseExact(startTimeStr, DATE_FORMAT, CultureInfo.InvariantCulture);
+    string jsonFileStr = File.ReadAllText(lastSuccessFilePath);
+    tickersAndDate = JsonSerializer.Deserialize<DataSerializationObject>(jsonFileStr)!;
 }
-else
-{
-    fromDate = new DateTime(DateTime.Now.Year - 2, 1, 1, 0, 0, 0);
-}
-Console.WriteLine("Start gathering tickers from " + fromDate.ToString(DATE_FORMAT));
 
 string[] tickers;
 if (File.Exists(tickerFilePath))
@@ -67,20 +65,28 @@ else
 Resolution[] TIME_RESOLUTIONS = { Resolution.Minute, Resolution.Hour, Resolution.Daily };
 try
 {
-    foreach (Resolution timeResolution in TIME_RESOLUTIONS)
+    var downloader = new GDAXDownloader();
+    
+    // Load settings from config.json
+    var dataDirectory = Globals.DataFolder;
+
+    foreach (var ticker in tickers)
     {
-
-        // Load settings from config.json
-        var dataDirectory = Globals.DataFolder;
-
-        // Create an instance of the downloader
         const string market = Market.GDAX;
-        var downloader = new GDAXDownloader();
-        foreach (var ticker in tickers)
-        {
-            // Download the data
-            var symbolObject = Symbol.Create(ticker, SecurityType.Crypto, market);
+        var symbolObject = Symbol.Create(ticker, SecurityType.Crypto, market);
 
+        DateTime fromDate = new DateTime(DateTime.Now.Year - 2, 1, 1, 0, 0, 0);
+        DateTime toDate = DateTime.Now;
+
+        string fromDateStr;
+        if (tickersAndDate.tickersAndLastTime.TryGetValue(ticker, out fromDateStr))
+        {
+            fromDate = DateTime.ParseExact(fromDateStr, DATE_FORMAT, CultureInfo.InvariantCulture);
+        }
+
+        foreach (Resolution timeResolution in TIME_RESOLUTIONS)
+        {
+            
             var data = downloader.Get(new DataDownloaderGetParameters(symbolObject, timeResolution, fromDate, toDate));
 
             // Save the data
@@ -89,11 +95,11 @@ try
 
             writer.Write(distinctData);
         }
-
+        tickersAndDate.tickersAndLastTime[ticker] = DateTime.Now.ToString(DATE_FORMAT);
     }
 
     // Success
-    File.WriteAllText(lastSuccessFilePath, DateTime.Now.ToString(DATE_FORMAT));
+    
 
 }
 catch (Exception err)
@@ -101,4 +107,11 @@ catch (Exception err)
     Log.Error(err);
     Log.Error(err.Message);
     Log.Error(err.StackTrace);
+}
+finally
+{
+    var options = new JsonSerializerOptions { WriteIndented = true };
+    string jsonString = JsonSerializer.Serialize(tickersAndDate, options);
+
+    File.WriteAllText(lastSuccessFilePath, jsonString);
 }
