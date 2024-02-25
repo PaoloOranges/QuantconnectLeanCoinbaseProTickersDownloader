@@ -1,0 +1,4 @@
+[submodule "Lean.Brokerages.CoinbasePro"]
+	path = Lean.Brokerages.CoinbasePro
+	url = git@github.com:PaoloOranges/Lean.Brokerages.CoinbasePro.git
+	branch = custom
