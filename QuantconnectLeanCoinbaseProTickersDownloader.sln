@@ -3,7 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33712.159
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuantconnectLeanCoinbaseProTickersDownloader", "QuantconnectLeanCoinbaseProTickersDownloader\QuantconnectLeanCoinbaseProTickersDownloader.csproj", "{45304DF4-4C39-4A63-9CB2-5747A89148BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuantconnectLeanCoinbaseProTickersDownloader", "QuantconnectLeanCoinbaseProTickersDownloader\QuantconnectLeanCoinbaseProTickersDownloader.csproj", "{45304DF4-4C39-4A63-9CB2-5747A89148BE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{88080BFF-6CA5-4C70-8BF4-0F7D29E3A222} = {88080BFF-6CA5-4C70-8BF4-0F7D29E3A222}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuantConnect.CoinbaseBrokerage", "Lean.Brokerages.CoinbasePro\QuantConnect.CoinbaseBrokerage\QuantConnect.CoinbaseBrokerage.csproj", "{08ABB51E-1008-46CD-B121-B21DD5535179}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuantConnect.CoinbaseBrokerage.ToolBox", "Lean.Brokerages.CoinbasePro\QuantConnect.CoinbaseBrokerage.ToolBox\QuantConnect.CoinbaseBrokerage.ToolBox.csproj", "{88080BFF-6CA5-4C70-8BF4-0F7D29E3A222}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +22,14 @@ Global
 		{45304DF4-4C39-4A63-9CB2-5747A89148BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45304DF4-4C39-4A63-9CB2-5747A89148BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{45304DF4-4C39-4A63-9CB2-5747A89148BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08ABB51E-1008-46CD-B121-B21DD5535179}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08ABB51E-1008-46CD-B121-B21DD5535179}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08ABB51E-1008-46CD-B121-B21DD5535179}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08ABB51E-1008-46CD-B121-B21DD5535179}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88080BFF-6CA5-4C70-8BF4-0F7D29E3A222}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88080BFF-6CA5-4C70-8BF4-0F7D29E3A222}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88080BFF-6CA5-4C70-8BF4-0F7D29E3A222}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88080BFF-6CA5-4C70-8BF4-0F7D29E3A222}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,7 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="QuantConnect.GDAXBrokerage.ToolBox" Version="2.5.15727" />
+    <PackageReference Include="QuantConnect.Common" Version="2.5.16255" />
+    <PackageReference Include="QuantConnect.Configuration" Version="2.5.16255" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lean.Brokerages.CoinbasePro\QuantConnect.CoinbaseBrokerage.ToolBox\QuantConnect.CoinbaseBrokerage.ToolBox.csproj" />
   </ItemGroup>
 
 </Project>

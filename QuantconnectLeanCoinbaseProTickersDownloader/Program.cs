@@ -1,11 +1,11 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using QuantConnect.Data;
 using QuantConnect;
-using QuantConnect.ToolBox.GDAXDownloader;
 using QuantConnect.Logging;
 using System.Globalization;
 using QuantConnect.Configuration;
 using System.Text.Json;
+using QuantConnect.CoinbaseBrokerage.ToolBox;
 
 string configFilePath = "";
 string outputPath = "";
@@ -65,14 +65,15 @@ else
 Resolution[] TIME_RESOLUTIONS = { Resolution.Minute, Resolution.Hour, Resolution.Daily };
 try
 {
-    var downloader = new GDAXDownloader();
+    const string market = Market.Coinbase;
+    
+    var downloader = new CoinbaseDownloader();
     
     // Load settings from config.json
     var dataDirectory = Globals.DataFolder;
 
     foreach (var ticker in tickers)
     {
-        const string market = Market.GDAX;
         var symbolObject = Symbol.Create(ticker, SecurityType.Crypto, market);
 
         DateTime fromDate = new DateTime(DateTime.Now.Year - 2, 1, 1, 0, 0, 0);
