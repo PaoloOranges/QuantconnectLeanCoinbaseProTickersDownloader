@@ -37,8 +37,6 @@ const string LAST_DOWNLOAD_SUCCESS_TIME_FILE = "last_success_time";
 const string DATE_FORMAT = "yyyyMMdd-HH:mm:ss";
 
 
-
-
 string lastSuccessFilePath = Path.Combine(outputPath, LAST_DOWNLOAD_SUCCESS_TIME_FILE);
 
 Dictionary<string, string> tickersAndLastTime = new Dictionary<string, string>();
