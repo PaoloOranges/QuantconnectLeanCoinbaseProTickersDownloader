@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="QuantConnect.Common" Version="2.5.16255" />
-    <PackageReference Include="QuantConnect.Configuration" Version="2.5.16255" />
+    <PackageReference Include="QuantConnect.Common" Version="2.5.16603" />
+    <PackageReference Include="QuantConnect.Configuration" Version="2.5.16603" />
   </ItemGroup>
 
   <ItemGroup>
