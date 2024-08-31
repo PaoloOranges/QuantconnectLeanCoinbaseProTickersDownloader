@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 as builder
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS builder
 
 WORKDIR /build/src
 
@@ -8,8 +8,7 @@ COPY Lean.Brokerages.CoinbasePro ./Lean.Brokerages.CoinbasePro
 
 WORKDIR /build
 
-RUN dotnet publish src/QuantconnectLeanCoinbaseProTickersDownloader.sln -c Release -o /output && \
-    rm -rf src
+RUN dotnet publish src/QuantconnectLeanCoinbaseProTickersDownloader.sln -c Release -o /output && rm -rf src
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0-alpine
 
@@ -33,6 +32,6 @@ COPY scripts/entrypoint.sh .
 COPY $TICKERS_FILE_NAME .
 
 # Set Crontab
-RUN crontab -l | { cat; echo "30 23 * * * bash $EXECUTABLE_PATH/$ENTRY_POINT_FILE_NAME > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"; } | crontab -
+#RUN crontab -l | { cat; echo "30 23 * * * bash $EXECUTABLE_PATH/$ENTRY_POINT_FILE_NAME > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"; } | crontab -
 
-CMD ["crond", "-f" ] 
+CMD ["bash", "-c", "$EXECUTABLE_PATH/$ENTRY_POINT_FILE_NAME > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"]
