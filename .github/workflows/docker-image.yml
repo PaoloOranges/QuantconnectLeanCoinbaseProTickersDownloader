@@ -28,5 +28,5 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        push: ${{ github.event_name == "release"}}
+        push: ${{ github.event_name == release}}
         tags: ${{ env.IMAGE_NAME }}/${{env.VERSION}}, ${{ env.IMAGE_NAME }}/latest
