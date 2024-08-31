@@ -1,8 +1,8 @@
 name: Build and Push Docker Image
 
 on:
-  # push:
-  #   branches: [ "master" ]
+  push:
+    branches: [ "master" ]
   release:
     types: published
 
@@ -28,5 +28,5 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        push: true
+        push: ${{ github.event_name == "release"}}
         tags: ${{ env.IMAGE_NAME }}/${{env.VERSION}}, ${{ env.IMAGE_NAME }}/latest
