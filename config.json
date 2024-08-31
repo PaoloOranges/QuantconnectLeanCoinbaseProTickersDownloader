@@ -1,4 +1,6 @@
 {
-    "data-folder": "../Data",
-    "data-directory": "../Data"
+  "coinbase-api-key": "temp",
+  "coinbase-api-secret": "secret",
+  "data-folder": "./Data/",
+  "data-directory": "./Data/"
 }
