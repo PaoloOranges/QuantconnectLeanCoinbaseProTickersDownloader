@@ -12,7 +12,7 @@ RUN dotnet publish src/QuantconnectLeanCoinbaseProTickersDownloader.sln -c Relea
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0-alpine
 
-ARG EXECUTABLE_PATH=/QuantconnectLeanCoinbaseProTickersDownloader
+ARG EXECUTABLE_PATH=/opt/bin/QuantconnectLeanCoinbaseProTickersDownloader
 ARG TICKERS_FILE_NAME=tickers.txt
 ARG ENTRY_POINT_FILE_NAME=entrypoint.sh
 
@@ -28,8 +28,10 @@ RUN apk add bash icu-libs
 
 WORKDIR $EXECUTABLE_PATH    
 COPY --from=builder /output .
-COPY scripts/entrypoint.sh .
+COPY scripts/$ENTRY_POINT_FILE_NAME .
 COPY $TICKERS_FILE_NAME .
+
+RUN chmod +x $ENTRY_POINT_FILE_NAME
 
 # Set Crontab
 #RUN crontab -l | { cat; echo "30 23 * * * bash $EXECUTABLE_PATH/$ENTRY_POINT_FILE_NAME > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"; } | crontab -
