@@ -37,4 +37,4 @@ RUN chmod +x $ENTRY_POINT_FILE_NAME
 # Set Crontab
 #RUN crontab -l | { cat; echo "30 23 * * * bash $EXECUTABLE_PATH/$ENTRY_POINT_FILE_NAME > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"; } | crontab -
 
-CMD ["bash", "-c", "./$ENTRY_POINT_FILE > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"]
+CMD ["bash", "-c", "$ENTRY_POINT_FILE_PATH > $SHARED_STORAGE_HOME/DownloadDataUntilNow.log"]
