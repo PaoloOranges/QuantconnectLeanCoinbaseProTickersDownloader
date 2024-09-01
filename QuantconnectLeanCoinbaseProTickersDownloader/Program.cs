@@ -95,6 +95,8 @@ try
             writer.Write(distinctData);
         }
         tickersAndLastTime[ticker] = DateTime.Now.ToString(DATE_FORMAT);
+
+        WriteDownloadProgressToFile();
     }
 
 }
@@ -105,6 +107,11 @@ catch (Exception err)
     Log.Error(err.StackTrace);
 }
 finally
+{
+    WriteDownloadProgressToFile();
+}
+
+void WriteDownloadProgressToFile()
 {
     var options = new JsonSerializerOptions { WriteIndented = true };
     string jsonString = JsonSerializer.Serialize(tickersAndLastTime, options);
