@@ -1,11 +1,12 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using QuantConnect.Data;
 using QuantConnect;
-using QuantConnect.Logging;
-using System.Globalization;
+using QuantConnect.Brokerages.Coinbase.ToolBox;
 using QuantConnect.Configuration;
+using QuantConnect.Data;
+using QuantConnect.Logging;
+using QuantConnect.ToolBox;
+using System.Globalization;
 using System.Text.Json;
-using QuantConnect.CoinbaseBrokerage.ToolBox;
 
 string configFilePath = "";
 string outputPath = "";
@@ -65,7 +66,6 @@ try
 {
     const string market = Market.Coinbase;
     
-    var downloader = new CoinbaseDownloader();
     
     // Load settings from config.json
     var dataDirectory = Globals.DataFolder;
@@ -83,16 +83,18 @@ try
             fromDate = DateTime.ParseExact(fromDateStr, DATE_FORMAT, CultureInfo.InvariantCulture);
         }
 
+        new ExchangeInfoUpdater(new CoinbaseExchangeInfoDownloader()).Run();
+
         foreach (Resolution timeResolution in TIME_RESOLUTIONS)
         {
             Console.WriteLine("Download " + timeResolution + " for " + ticker);
-            var data = downloader.Get(new DataDownloaderGetParameters(symbolObject, timeResolution, fromDate, toDate));
+            //var data = downloader.Get(new DataDownloaderGetParameters(symbolObject, timeResolution, fromDate, toDate));
 
             // Save the data
             var writer = new LeanDataWriter(timeResolution, symbolObject, dataDirectory, TickType.Trade);
-            var distinctData = data.GroupBy(i => i.Time, (key, group) => group.First()).ToArray();
+            //var distinctData = data.GroupBy(i => i.Time, (key, group) => group.First()).ToArray();
 
-            writer.Write(distinctData);
+            //writer.Write(distinctData);
         }
         tickersAndLastTime[ticker] = DateTime.Now.ToString(DATE_FORMAT);
 
